@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CaePe · Organiza la salida y divide los gastos sin dramas</title>
+  <meta name="description" content="CaePe arma tus salidas en grupo, calcula cuánto pone cada quien y confirma los pagos. Tu dinero nunca pasa por la app: pagas directo por Yape o Plin. Descárgala para Android." />
+
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <meta property="og:title" content="CaePe · Salidas en grupo, cuentas claras" />
+  <meta property="og:description" content="Organiza la salida, divide el presupuesto y confirma los pagos. Tú pagas por Yape o Plin." />
+  <meta property="og:image" content="./logo.png" />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts: Outfit (display) + Plus Jakarta Sans (body). Pragmatic CDN for a no-build static site. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Icons: Phosphor (allowed library, no hand-rolled SVG paths) -->
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- ===================== NAV ===================== -->
+  <header class="nav" id="top">
+    <div class="nav__inner">
+      <a class="brand" href="#top" aria-label="CaePe, inicio">
+        <img class="brand__logo" src="./logo.png" alt="" width="40" height="40" />
+        <span class="brand__name">CaePe</span>
+      </a>
+
+      <nav class="nav__links" aria-label="Principal">
+        <a href="#que-es">¿Qué es?</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#seguridad">Tu dinero</a>
+        <a href="#faq">Preguntas</a>
+      </nav>
+
+      <div class="nav__actions">
+        <a class="btn btn--primary btn--sm" href="#descargar">
+          <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
+          Descargar APK
+        </a>
+        <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+          <i class="ph-bold ph-list" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav__mobile" id="mobileMenu" hidden>
+      <a href="#que-es">¿Qué es?</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#beneficios">Beneficios</a>
+      <a href="#seguridad">Tu dinero</a>
+      <a href="#faq">Preguntas</a>
+      <a class="btn btn--primary" href="#descargar"><i class="ph-bold ph-download-simple" aria-hidden="true"></i> Descargar APK</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <span class="blob blob--coral"></span>
+        <span class="blob blob--mint"></span>
+        <span class="coin coin--1"></span>
+        <span class="coin coin--2"></span>
+        <span class="coin coin--3"></span>
+        <span class="spark"></span>
+        <span class="bubble"></span>
+      </div>
+
+      <div class="hero__inner">
+        <div class="hero__copy reveal">
+          <span class="eyebrow"><i class="ph-bold ph-android-logo" aria-hidden="true"></i> Disponible para Android</span>
+          <h1 class="hero__title">Organiza la salida y divide<br />los gastos <span class="text-coral">sin dramas</span></h1>
+          <p class="hero__sub">CaePe arma el plan con tu grupo, calcula cuánto pone cada quien y confirma los pagos. Tú pagas directo por Yape o Plin.</p>
+          <div class="hero__cta">
+            <a class="btn btn--primary btn--lg" href="#descargar">
+              <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
+              Descargar APK
+            </a>
+            <a class="btn btn--ghost btn--lg" href="#como-funciona">
+              Ver cómo funciona
+              <i class="ph-bold ph-arrow-down" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero__art reveal" data-reveal-delay="1">
+          <img class="hero__art-img" src="./logo.png" alt="Logo de CaePe: una alcancía rodeada de amigos y monedas" width="460" height="460" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== QUÉ ES ===================== -->
+    <section class="section" id="que-es">
+      <div class="container">
+        <div class="lead reveal">
+          <span class="eyebrow eyebrow--mint"><i class="ph-bold ph-users-three" aria-hidden="true"></i> Qué es CaePe</span>
+          <h2 class="section__title">Salidas que se arman solas, cuentas que quedan claras.</h2>
+          <p class="section__lead">Deja de perseguir a todos por la plata. Crea la salida, divide el presupuesto y cada quien aporta su parte. Rápido, transparente y sin malos ratos.</p>
+        </div>
+
+        <div class="stats reveal">
+          <div class="stat">
+            <i class="ph-bold ph-calendar-check stat__icon" aria-hidden="true"></i>
+            <h3>Organiza la salida</h3>
+            <p>El plan, la fecha y el grupo en un solo lugar.</p>
+          </div>
+          <div class="stat">
+            <i class="ph-bold ph-divide stat__icon" aria-hidden="true"></i>
+            <h3>Divide justo</h3>
+            <p>CaePe calcula cuánto le toca a cada uno al instante.</p>
+          </div>
+          <div class="stat">
+            <i class="ph-bold ph-seal-check stat__icon" aria-hidden="true"></i>
+            <h3>Cuentas claras</h3>
+            <p>Mira quién ya pagó y quién falta, sin incomodar a nadie.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CÓMO FUNCIONA ===================== -->
+    <section class="section section--mint" id="como-funciona">
+      <div class="container">
+        <div class="lead lead--center reveal">
+          <h2 class="section__title">De la idea al plan en cuatro pasos</h2>
+          <p class="section__lead">Así de simple es armar una salida y dejar las cuentas resueltas.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step reveal" data-reveal-delay="0">
+            <span class="step__num">1</span>
+            <i class="ph-bold ph-calendar-plus step__icon" aria-hidden="true"></i>
+            <h3>Crea la salida</h3>
+            <p>Pon el plan, la fecha y el presupuesto estimado.</p>
+          </li>
+          <li class="step reveal" data-reveal-delay="1">
+            <span class="step__num">2</span>
+            <i class="ph-bold ph-user-plus step__icon" aria-hidden="true"></i>
+            <h3>Invita a tu grupo</h3>
+            <p>Suma a tus amigos con un enlace y listo.</p>
+          </li>
+          <li class="step reveal" data-reveal-delay="2">
+            <span class="step__num">3</span>
+            <i class="ph-bold ph-chart-pie-slice step__icon" aria-hidden="true"></i>
+            <h3>Divide el presupuesto</h3>
+            <p>Reparte el monto en partes iguales o a tu medida.</p>
+          </li>
+          <li class="step reveal" data-reveal-delay="3">
+            <span class="step__num">4</span>
+            <i class="ph-bold ph-check-circle step__icon" aria-hidden="true"></i>
+            <h3>Paguen y confirmen</h3>
+            <p>Cada quien paga por Yape o Plin y marca su pago.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== BENEFICIOS (BENTO) ===================== -->
+    <section class="section" id="beneficios">
+      <div class="container">
+        <div class="lead reveal">
+          <h2 class="section__title">Todo para que la cuenta no arruine el plan</h2>
+        </div>
+
+        <div class="bento reveal">
+          <article class="cell cell--lg cell--coral">
+            <i class="ph-bold ph-divide cell__icon" aria-hidden="true"></i>
+            <h3>Divide gastos sin discusiones</h3>
+            <p>Reparte la cuenta en partes iguales o personalizadas. Cada quien sabe exactamente cuánto le toca, sin cálculos en la servilleta ni cobros incómodos.</p>
+          </article>
+
+          <article class="cell cell--mint">
+            <i class="ph-bold ph-seal-check cell__icon" aria-hidden="true"></i>
+            <h3>Confirma pagos</h3>
+            <p>Marca quién ya aportó y olvídate de andar preguntando.</p>
+          </article>
+
+          <article class="cell cell--yellow">
+            <i class="ph-bold ph-bell-ringing cell__icon" aria-hidden="true"></i>
+            <h3>Recordatorios</h3>
+            <p>Avisos suaves para los que siempre se olvidan.</p>
+          </article>
+
+          <article class="cell cell--plain">
+            <i class="ph-bold ph-confetti cell__icon" aria-hidden="true"></i>
+            <h3>Para cualquier plan</h3>
+            <p>Cumpleaños, viajes, parrillas o el after del viernes.</p>
+          </article>
+
+          <article class="cell cell--wide cell--ink">
+            <i class="ph-bold ph-chats-circle cell__icon" aria-hidden="true"></i>
+            <h3>Todo el grupo en la misma página</h3>
+            <p>Coordinen el plan, vean el detalle de la cuenta y sigan cada aporte en tiempo real. Sin grupos de chat caóticos ni capturas perdidas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SEGURIDAD / DINERO ===================== -->
+    <section class="section section--yellow" id="seguridad">
+      <div class="container">
+        <div class="trust reveal">
+          <span class="trust__badge"><i class="ph-bold ph-shield-check" aria-hidden="true"></i></span>
+          <h2 class="trust__title">Tu plata es tuya. Siempre.</h2>
+          <p class="trust__lead">CaePe organiza y divide, pero nunca retiene ni mueve tu dinero. Cada pago va directo entre ustedes por Yape o Plin. Nosotros solo te ayudamos a mantener las cuentas claras.</p>
+          <div class="trust__chips">
+            <span class="trust__label">Pagas con lo que ya usas</span>
+            <span class="chip">Yape</span>
+            <span class="chip">Plin</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== DESCARGAR ===================== -->
+    <section class="section section--coral" id="descargar">
+      <div class="container">
+        <div class="download">
+          <div class="download__copy reveal">
+            <span class="eyebrow"><i class="ph-bold ph-android-logo" aria-hidden="true"></i> Para Android</span>
+            <h2 class="section__title">Descarga CaePe y arma tu próxima salida</h2>
+            <p class="section__lead">Por ahora la repartimos como APK para Android. Pronto estará en Google Play.</p>
+
+            <a class="btn btn--primary btn--lg download__btn" href="./CaePe.apk" download>
+              <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
+              Descargar APK
+            </a>
+          </div>
+
+          <ol class="install reveal" data-reveal-delay="1">
+            <li class="install__step">
+              <span class="install__num">1</span>
+              <div>
+                <h3>Descarga el archivo</h3>
+                <p>Toca el botón y guarda el APK en tu teléfono.</p>
+              </div>
+            </li>
+            <li class="install__step">
+              <span class="install__num">2</span>
+              <div>
+                <h3>Permite la instalación</h3>
+                <p>Si Android lo pide, habilita instalar desde esta fuente.</p>
+              </div>
+            </li>
+            <li class="install__step">
+              <span class="install__num">3</span>
+              <div>
+                <h3>Abre e instala</h3>
+                <p>Abre el archivo descargado y toca Instalar. Listo.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FAQ ===================== -->
+    <section class="section" id="faq">
+      <div class="container container--narrow">
+        <div class="lead lead--center reveal">
+          <h2 class="section__title">Preguntas frecuentes</h2>
+        </div>
+
+        <div class="faq reveal">
+          <details class="faq__item">
+            <summary>¿CaePe maneja mi dinero?<i class="ph-bold ph-plus faq__chevron" aria-hidden="true"></i></summary>
+            <div class="faq__body"><p>No. CaePe nunca retiene ni mueve tu plata. La app solo organiza la salida y calcula cuánto pone cada quien. Los pagos los hacen ustedes directamente por Yape o Plin.</p></div>
+          </details>
+          <details class="faq__item">
+            <summary>¿Cómo confirmo que alguien ya pagó?<i class="ph-bold ph-plus faq__chevron" aria-hidden="true"></i></summary>
+            <div class="faq__body"><p>Cuando cada persona hace su transferencia por Yape o Plin, marca su pago en la app. Así todo el grupo ve quién ya aportó y quién falta, sin tener que preguntar.</p></div>
+          </details>
+          <details class="faq__item">
+            <summary>¿Puedo dividir la cuenta de forma desigual?<i class="ph-bold ph-plus faq__chevron" aria-hidden="true"></i></summary>
+            <div class="faq__body"><p>Sí. Divide en partes iguales o ajusta cuánto pone cada quien según lo que consumió o acordaron. Tú tienes el control del reparto.</p></div>
+          </details>
+          <details class="faq__item">
+            <summary>¿Qué necesito para usarla y cuánto cuesta?<i class="ph-bold ph-plus faq__chevron" aria-hidden="true"></i></summary>
+            <div class="faq__body"><p>Solo un Android 8.0 o superior. Descargar y organizar tus salidas en CaePe no tiene costo.</p></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA FINAL ===================== -->
+    <section class="finalcta">
+      <div class="container">
+        <div class="finalcta__card reveal">
+          <img class="finalcta__logo" src="./logo.png" alt="" width="72" height="72" />
+          <h2>La próxima salida se arma sin dramas de plata</h2>
+          <a class="btn btn--primary btn--lg" href="#descargar"><i class="ph-bold ph-download-simple" aria-hidden="true"></i> Descargar APK</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a class="brand" href="#top">
+        <img class="brand__logo" src="./logo.png" alt="" width="34" height="34" />
+        <span class="brand__name">CaePe</span>
+      </a>
+      <p class="footer__tag">Organiza salidas. Divide gastos. Sin dramas.</p>
+      <p class="footer__copy">© <span id="year">2026</span> CaePe. Tú pagas por Yape o Plin; nosotros mantenemos las cuentas claras.</p>
+    </div>
+  </footer>
+
+  <script src="./main.js"></script>
+</body>
+</html>
