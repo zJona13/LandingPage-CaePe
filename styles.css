@@ -487,7 +487,45 @@ a { color: inherit; text-decoration: none; }
 .footer .brand__name { color: #fbf2e4; }
 .footer__inner { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
 .footer__tag { color: #fbf2e4; font-weight: 600; }
+.footer__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.footer__links a { color: #fbf2e4; font-weight: 600; font-size: 0.92rem; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; text-decoration-color: var(--yellow); transition: color 140ms var(--ease); }
+.footer__links a:hover { color: var(--yellow); }
 .footer__copy { color: #c5b6a0; font-size: 0.9rem; }
+
+/* ---- legal (términos) ---- */
+.legal { display: grid; gap: 30px; }
+.legal__item { padding: 0; }
+.legal__title {
+  font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px;
+}
+.legal__num {
+  flex: none; display: grid; place-items: center;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: var(--on-color);
+  border: var(--b) solid var(--on-color);
+  box-shadow: 3px 3px 0 var(--on-color);
+  font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 16px;
+}
+.legal__item p { color: var(--ink-soft); font-size: 1.04rem; max-width: 62ch; }
+.legal__link { color: var(--coral-2); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.legal__link:hover { color: var(--coral); }
+.legal__note {
+  margin-top: 14px;
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--card);
+  border: var(--b) solid var(--ink);
+  border-radius: var(--r);
+  box-shadow: 5px 5px 0 var(--ink);
+  padding: 18px 22px;
+  font-size: 0.96rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.legal__note i { color: var(--coral-2); font-size: 1.2em; flex: none; margin-top: 2px; }
 
 /* ===================== REVEAL (rebote) ===================== */
 .reveal {
