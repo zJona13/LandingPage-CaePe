@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CaePe · Te invitaron a una salida</title>
+  <meta name="description" content="Te invitaron a una salida en CaePe. Mira los detalles, cuánto pones y descarga la app para confirmar tu pago." />
+
+  <link rel="icon" type="image/png" href="./logo.png" />
+  <meta property="og:title" content="CaePe · Te invitaron a una salida" />
+  <meta property="og:description" content="Mira los detalles del evento y cuánto pones. Pagas por Yape o Plin." />
+  <meta property="og:image" content="./logo.png" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="./styles.css" />
+
+  <style>
+    /* ---- Invite page (scoped) ---- */
+    .invite { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 18px; gap: 18px; }
+    .invite__brand { display: flex; align-items: center; gap: 10px; }
+    .invite__brand img { width: 40px; height: 40px; }
+    .invite__brand span { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--ink); }
+    .invite-card {
+      width: 100%; max-width: 460px; background: var(--card);
+      border: var(--b) solid var(--on-color); border-radius: var(--r-lg);
+      box-shadow: 6px 6px 0 var(--on-color); padding: 22px; display: flex; flex-direction: column; gap: 16px;
+    }
+    .invite-card__tag { align-self: flex-start; font-weight: 700; font-size: .8rem; padding: 4px 12px; border-radius: var(--r-pill); background: var(--yellow); border: 2px solid var(--on-color); color: var(--on-color); }
+    .invite-card__title { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.7rem; line-height: 1.15; color: var(--ink); margin: 0; }
+    .invite-rows { display: flex; flex-direction: column; gap: 10px; }
+    .invite-row { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-weight: 500; }
+    .invite-row i { font-size: 1.2rem; color: var(--coral-2); }
+    .invite-amount { background: var(--mint); border: var(--b) solid var(--on-color); border-radius: var(--r); padding: 14px 16px; text-align: center; }
+    .invite-amount span { display: block; font-size: .82rem; font-weight: 600; color: var(--on-color-soft); }
+    .invite-amount strong { font-family: "Fredoka", sans-serif; font-size: 2rem; color: var(--on-color); }
+    .invite-pay { border: 2px dashed var(--on-color); border-radius: var(--r); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+    .invite-pay__head { font-size: .82rem; font-weight: 600; color: var(--ink-soft); }
+    .invite-pay__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .invite-pay__num { font-family: "Fredoka", sans-serif; font-size: 1.15rem; color: var(--ink); }
+    .invite-copy { cursor: pointer; border: 2px solid var(--on-color); background: var(--paper); border-radius: var(--r-pill); padding: 6px 12px; font-weight: 600; font-size: .82rem; display: inline-flex; gap: 6px; align-items: center; }
+    .invite-note { font-size: .8rem; color: var(--ink-soft); text-align: center; }
+    .invite-funded { background: var(--mint-2); border: var(--b) solid var(--on-color); border-radius: var(--r); padding: 12px; text-align: center; font-weight: 700; color: var(--on-color); }
+    .invite-actions { display: flex; flex-direction: column; gap: 10px; }
+    .invite-state { text-align: center; color: var(--ink-soft); padding: 40px 0; }
+    .invite-state i { font-size: 2.4rem; display: block; margin-bottom: 10px; color: var(--coral-2); }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="invite">
+    <a class="invite__brand" href="/" aria-label="CaePe, inicio">
+      <img src="./logo.png" alt="" width="40" height="40" />
+      <span>CaePe</span>
+    </a>
+
+    <!-- Loading -->
+    <div class="invite-card" id="stateLoading">
+      <div class="invite-state"><i class="ph-bold ph-spinner-gap"></i>Cargando invitación…</div>
+    </div>
+
+    <!-- Error -->
+    <div class="invite-card hidden" id="stateError">
+      <div class="invite-state">
+        <i class="ph-bold ph-warning-circle"></i>
+        <p id="errorMsg">No encontramos esta invitación. Puede haber expirado.</p>
+      </div>
+      <div class="invite-actions">
+        <a class="btn btn--primary" href="/#descargar"><i class="ph-bold ph-download-simple"></i> Descargar CaePe</a>
+      </div>
+    </div>
+
+    <!-- Event -->
+    <div class="invite-card hidden" id="stateEvent">
+      <span class="invite-card__tag"><i class="ph-bold ph-confetti"></i> ¡Te invitaron!</span>
+      <h1 class="invite-card__title" id="evName"></h1>
+
+      <div class="invite-rows">
+        <div class="invite-row hidden" id="evDateRow"><i class="ph-bold ph-calendar-dots"></i><span id="evDate"></span></div>
+        <div class="invite-row hidden" id="evTimeRow"><i class="ph-bold ph-clock"></i><span id="evTime"></span></div>
+        <div class="invite-row hidden" id="evLocRow"><i class="ph-bold ph-map-pin"></i><span id="evLoc"></span></div>
+      </div>
+
+      <div class="invite-amount">
+        <span>Te toca poner</span>
+        <strong id="evAmount"></strong>
+      </div>
+
+      <div class="invite-funded hidden" id="evFunded"><i class="ph-bold ph-check-circle"></i> ¡Evento listo! Todos pagaron.</div>
+
+      <div class="invite-pay hidden" id="evPay">
+        <div class="invite-pay__head">Paga al organizador por <strong id="payMethod"></strong></div>
+        <div class="invite-pay__row">
+          <span class="invite-pay__num" id="payNumber"></span>
+          <button class="invite-copy" id="copyBtn"><i class="ph-bold ph-copy"></i> Copiar</button>
+        </div>
+      </div>
+
+      <p class="invite-note"><i class="ph-bold ph-shield-check"></i> El pago se hace fuera de la app, directo por Yape o Plin.</p>
+
+      <div class="invite-actions">
+        <a class="btn btn--primary" href="/#descargar"><i class="ph-bold ph-download-simple"></i> Descargar la app para unirte</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ===== CONFIG: confirma/reemplaza con la URL real del backend (Render) =====
+    const API_BASE = "https://caepe.onrender.com";
+    // ==========================================================================
+
+    function getInviteCode() {
+      // Soporta /events/join/CODE y ?code=CODE
+      const m = location.pathname.match(/\/events\/join\/([^/?#]+)/i);
+      if (m) return decodeURIComponent(m[1]);
+      return new URLSearchParams(location.search).get("code");
+    }
+
+    function show(id) {
+      ["stateLoading", "stateError", "stateEvent"].forEach((s) => {
+        document.getElementById(s).classList.toggle("hidden", s !== id);
+      });
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return "";
+      const d = new Date(iso + "T00:00:00");
+      if (isNaN(d)) return iso;
+      return d.toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long" });
+    }
+    function fmtTime(t) { return t ? String(t).slice(0, 5) : ""; }
+
+    function setRow(rowId, valueId, value) {
+      if (!value) return;
+      document.getElementById(valueId).textContent = value;
+      document.getElementById(rowId).classList.remove("hidden");
+    }
+
+    async function load() {
+      const code = getInviteCode();
+      if (!code) { show("stateError"); return; }
+      try {
+        const res = await fetch(`${API_BASE}/events/by-invite/${encodeURIComponent(code)}`);
+        if (!res.ok) throw new Error("not found");
+        const ev = await res.json();
+
+        document.getElementById("evName").textContent = ev.name || "Salida en grupo";
+        setRow("evDateRow", "evDate", fmtDate(ev.date));
+        setRow("evTimeRow", "evTime", fmtTime(ev.time));
+        setRow("evLocRow", "evLoc", ev.location);
+        document.getElementById("evAmount").textContent = `S/ ${Number(ev.amount_per_person).toFixed(2)}`;
+
+        if (ev.status === "funded") document.getElementById("evFunded").classList.remove("hidden");
+
+        if (ev.organizer_payment_method && ev.organizer_payment_number) {
+          document.getElementById("payMethod").textContent = String(ev.organizer_payment_method).toUpperCase();
+          document.getElementById("payNumber").textContent = ev.organizer_payment_number;
+          document.getElementById("evPay").classList.remove("hidden");
+          document.getElementById("copyBtn").addEventListener("click", async () => {
+            try {
+              await navigator.clipboard.writeText(ev.organizer_payment_number);
+              document.getElementById("copyBtn").innerHTML = '<i class="ph-bold ph-check"></i> Copiado';
+            } catch (_) {}
+          });
+        }
+
+        show("stateEvent");
+      } catch (_) {
+        show("stateError");
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

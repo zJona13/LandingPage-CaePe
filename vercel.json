@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/events/join/:code", "destination": "/invite.html" }
+  ]
+}
