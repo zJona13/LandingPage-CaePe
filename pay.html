@@ -19,19 +19,20 @@
     .pay__brand img { width: 40px; height: 40px; }
     .pay__brand span { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--ink); }
     .pay-card {
-      width: 100%; max-width: 420px; background: var(--card);
+      width: 100%; max-width: 440px; background: var(--card);
       border: var(--b) solid var(--on-color); border-radius: var(--r-lg);
-      box-shadow: 6px 6px 0 var(--on-color); padding: 24px; display: flex; flex-direction: column; gap: 16px; text-align: center; align-items: center;
+      box-shadow: 6px 6px 0 var(--on-color); padding: 22px; display: flex; flex-direction: column; gap: 14px;
     }
-    .pay-card__tag { align-self: center; font-weight: 700; font-size: .8rem; padding: 4px 12px; border-radius: var(--r-pill); background: var(--mint); border: 2px solid var(--on-color); color: var(--on-color); }
-    .pay-card__title { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--ink); margin: 0; }
-    .pay-amount { background: var(--yellow); border: var(--b) solid var(--on-color); border-radius: var(--r); padding: 14px 16px; width: 100%; }
-    .pay-amount span { display: block; font-size: .82rem; font-weight: 600; color: var(--on-color-soft); }
-    .pay-amount strong { font-family: "Fredoka", sans-serif; font-size: 2rem; color: var(--on-color); }
-    .pay-note { font-size: .8rem; color: var(--ink-soft); }
+    .pay-card__head { text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+    .pay-card__tag { font-weight: 700; font-size: .8rem; padding: 4px 12px; border-radius: var(--r-pill); background: var(--mint); border: 2px solid var(--on-color); color: var(--on-color); }
+    .pay-card__title { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--ink); margin: 0; }
+    .pay-amount { background: var(--yellow); border: var(--b) solid var(--on-color); border-radius: var(--r); padding: 12px 16px; text-align: center; }
+    .pay-amount span { display: block; font-size: .8rem; font-weight: 600; color: var(--on-color-soft); }
+    .pay-amount strong { font-family: "Fredoka", sans-serif; font-size: 1.8rem; color: var(--on-color); }
+    .pay-note { font-size: .78rem; color: var(--ink-soft); text-align: center; }
     .pay-state { text-align: center; color: var(--ink-soft); padding: 30px 0; }
     .pay-state i { font-size: 2.2rem; display: block; margin-bottom: 10px; color: var(--coral-2); }
-    .pay-actions { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .pay-actions { display: flex; flex-direction: column; gap: 10px; }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -42,38 +43,34 @@
       <span>CaePe</span>
     </a>
 
-    <!-- Loading -->
     <div class="pay-card" id="stateLoading">
       <div class="pay-state"><i class="ph-bold ph-spinner-gap"></i>Cargando tu compra…</div>
     </div>
 
-    <!-- Error -->
     <div class="pay-card hidden" id="stateError">
       <div class="pay-state"><i class="ph-bold ph-warning-circle"></i><p id="errorMsg">No pudimos cargar este pago.</p></div>
       <div class="pay-actions"><a class="btn btn--ghost" href="caepe://paywall">Volver a la app</a></div>
     </div>
 
-    <!-- Pay -->
     <div class="pay-card hidden" id="statePay">
-      <span class="pay-card__tag"><i class="ph-bold ph-shopping-bag"></i> <span id="payKind">Tu compra</span></span>
-      <h1 class="pay-card__title" id="payTitle"></h1>
+      <div class="pay-card__head">
+        <span class="pay-card__tag"><i class="ph-bold ph-shopping-bag"></i> <span id="payKind">Tu compra</span></span>
+        <h1 class="pay-card__title" id="payTitle"></h1>
+      </div>
       <div class="pay-amount">
         <span>Total a pagar</span>
         <strong id="payAmount"></strong>
       </div>
-      <div class="pay-actions">
-        <button class="btn btn--primary" id="payBtn"><i class="ph-bold ph-credit-card"></i> Pagar ahora</button>
-      </div>
-      <p class="pay-note"><i class="ph-bold ph-shield-check"></i> Pago seguro procesado por Culqi (tarjeta o Yape).</p>
+      <div id="cardPaymentBrick_container"></div>
+      <p class="pay-note"><i class="ph-bold ph-shield-check"></i> Pago seguro procesado por Mercado Pago.</p>
     </div>
 
-    <!-- Processing -->
     <div class="pay-card hidden" id="stateProcessing">
       <div class="pay-state"><i class="ph-bold ph-spinner-gap"></i>Procesando tu pago…</div>
     </div>
   </main>
 
-  <script src="https://checkout.culqi.com/js/v4"></script>
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
   <script>
     // ===== CONFIG: URL del backend (Render) =====
     const API_BASE = "https://caepe.onrender.com";
@@ -95,6 +92,51 @@
       return new URLSearchParams(location.search).get("bp");
     }
 
+    async function chargeBackend(formData) {
+      show("stateProcessing");
+      try {
+        const res = await fetch(`${API_BASE}/billing/charge`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            billing_payment_id: PAYMENT.id,
+            token: formData.token,
+            payment_method_id: formData.payment_method_id,
+            issuer_id: formData.issuer_id,
+            installments: formData.installments || 1,
+            payer_email: formData.payer && formData.payer.email,
+            identification: formData.payer && formData.payer.identification,
+          }),
+        });
+        if (res.ok) {
+          location.href = `${RETURN_BASE}?status=approved`;
+        } else {
+          let msg = "El pago fue rechazado.";
+          try { const b = await res.json(); if (b.detail) msg = b.detail; } catch (_) {}
+          location.href = `${RETURN_BASE}?status=rejected&msg=${encodeURIComponent(msg)}`;
+        }
+      } catch (_) {
+        location.href = `${RETURN_BASE}?status=rejected`;
+      }
+    }
+
+    function mountBrick() {
+      const mp = new MercadoPago(PAYMENT.public_key, { locale: "es-PE" });
+      const bricks = mp.bricks();
+      bricks.create("cardPayment", "cardPaymentBrick_container", {
+        initialization: { amount: Number(PAYMENT.amount) },
+        customization: { paymentMethods: { maxInstallments: 1 } },
+        callbacks: {
+          onReady: () => {},
+          onSubmit: (cardFormData) => {
+            // cardFormData: { token, payment_method_id, issuer_id, installments, payer }
+            return chargeBackend(cardFormData);
+          },
+          onError: (error) => { console.error("Brick error", error); },
+        },
+      });
+    }
+
     async function load() {
       const bp = getBp();
       if (!bp) return fail("Falta el identificador del pago.");
@@ -110,55 +152,14 @@
 
         document.getElementById("payTitle").textContent = PAYMENT.title;
         document.getElementById("payKind").textContent = PAYMENT.kind === "premium" ? "Premium" : "Créditos";
-        document.getElementById("payAmount").textContent =
-          `S/ ${Number(PAYMENT.amount).toFixed(2)}`;
-
-        // Configura Culqi Checkout V4
-        Culqi.publicKey = PAYMENT.public_key;
-        Culqi.settings({
-          title: "CaePe",
-          currency: PAYMENT.currency || "PEN",
-          amount: PAYMENT.amount_cents,
-        });
-        Culqi.options({
-          lang: "es",
-          installments: false,
-          paymentMethods: { tarjeta: true, yape: true, billetera: false, bancaMovil: false, agente: false, cuotealo: false },
-        });
+        document.getElementById("payAmount").textContent = `S/ ${Number(PAYMENT.amount).toFixed(2)}`;
 
         show("statePay");
-        document.getElementById("payBtn").addEventListener("click", () => Culqi.open());
+        mountBrick();
       } catch (_) {
         fail("No encontramos esta compra o ya expiró.");
       }
     }
-
-    // Callback global de Culqi (token de tarjeta o Yape).
-    window.culqi = async function () {
-      if (Culqi.token && Culqi.token.id) {
-        show("stateProcessing");
-        try {
-          const res = await fetch(`${API_BASE}/billing/culqi/charge`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ billing_payment_id: PAYMENT.id, token: Culqi.token.id }),
-          });
-          if (res.ok) {
-            location.href = `${RETURN_BASE}?status=approved`;
-          } else {
-            let msg = "El pago fue rechazado.";
-            try { const b = await res.json(); if (b.detail) msg = b.detail; } catch (_) {}
-            location.href = `${RETURN_BASE}?status=rejected&msg=${encodeURIComponent(msg)}`;
-          }
-        } catch (_) {
-          location.href = `${RETURN_BASE}?status=rejected`;
-        }
-      } else if (Culqi.error) {
-        // Error de tokenización (no cobra). Volvemos a mostrar el botón.
-        show("statePay");
-        alert(Culqi.error.user_message || "No se pudo procesar el medio de pago.");
-      }
-    };
 
     load();
   </script>
