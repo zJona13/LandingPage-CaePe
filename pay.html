@@ -62,6 +62,7 @@
         <strong id="payAmount"></strong>
       </div>
       <div id="cardPaymentBrick_container"></div>
+      <p id="payError" class="pay-note" style="color: var(--coral-2); font-weight: 600;"></p>
       <p class="pay-note"><i class="ph-bold ph-shield-check"></i> Pago seguro procesado por Mercado Pago.</p>
     </div>
 
@@ -92,31 +93,41 @@
       return new URLSearchParams(location.search).get("bp");
     }
 
+    function showError(msg) {
+      const el = document.getElementById("payError");
+      if (el) el.textContent = msg || "";
+    }
+
+    // NO ocultamos el Brick mientras procesamos (ocultarlo lo rompe). Mostramos el
+    // error real en pantalla para diagnosticar, en vez del mensaje genérico.
     async function chargeBackend(formData) {
-      show("stateProcessing");
+      showError("");
+      const fd = formData && formData.formData ? formData.formData : formData; // soporta ambas firmas
+      const body = {
+        billing_payment_id: PAYMENT.id,
+        token: fd.token,
+        payment_method_id: fd.payment_method_id,
+        issuer_id: fd.issuer_id,
+        installments: fd.installments || 1,
+        payer_email: fd.payer && fd.payer.email,
+        identification: fd.payer && fd.payer.identification,
+      };
       try {
         const res = await fetch(`${API_BASE}/billing/charge`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            billing_payment_id: PAYMENT.id,
-            token: formData.token,
-            payment_method_id: formData.payment_method_id,
-            issuer_id: formData.issuer_id,
-            installments: formData.installments || 1,
-            payer_email: formData.payer && formData.payer.email,
-            identification: formData.payer && formData.payer.identification,
-          }),
+          body: JSON.stringify(body),
         });
         if (res.ok) {
           location.href = `${RETURN_BASE}?status=approved`;
-        } else {
-          let msg = "El pago fue rechazado.";
-          try { const b = await res.json(); if (b.detail) msg = b.detail; } catch (_) {}
-          location.href = `${RETURN_BASE}?status=rejected&msg=${encodeURIComponent(msg)}`;
+          return;
         }
-      } catch (_) {
-        location.href = `${RETURN_BASE}?status=rejected`;
+        let msg = `Error ${res.status}.`;
+        try { const b = await res.json(); if (b.detail) msg = typeof b.detail === "string" ? b.detail : JSON.stringify(b.detail); } catch (_) {}
+        showError(msg);
+        if (!fd.token) showError("No se generó el token de la tarjeta (token vacío). " + msg);
+      } catch (e) {
+        showError("No se pudo conectar con el servidor: " + (e && e.message ? e.message : e));
       }
     }
 
@@ -132,7 +143,12 @@
             // cardFormData: { token, payment_method_id, issuer_id, installments, payer }
             return chargeBackend(cardFormData);
           },
-          onError: (error) => { console.error("Brick error", error); },
+          onError: (error) => {
+            console.error("Brick error", error);
+            let msg = "Error del formulario de pago.";
+            try { msg = (error && (error.message || error.cause)) ? JSON.stringify(error.message || error.cause) : JSON.stringify(error); } catch (_) {}
+            showError("MP: " + msg);
+          },
         },
       });
     }
