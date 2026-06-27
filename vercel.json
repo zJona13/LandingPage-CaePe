@@ -3,6 +3,7 @@
     { "source": "/events/join/:code", "destination": "/invite.html" },
     { "source": "/groups/join/:code", "destination": "/group.html" },
     { "source": "/billing/return", "destination": "/billing-return.html" },
+    { "source": "/pay", "destination": "/pay.html" },
     { "source": "/r/:code", "destination": "/r.html" }
   ]
 }
