@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CaePe · Pago en proceso</title>
+  <meta name="description" content="Tu pago en CaePe se está confirmando. Vuelve a la app para ver tus créditos o tu plan Premium." />
+  <meta name="robots" content="noindex" />
+
+  <link rel="icon" type="image/png" href="/logo.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    /* ---- Billing return (scoped) ---- */
+    .invite { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 18px; gap: 18px; }
+    .invite__brand { display: flex; align-items: center; gap: 10px; }
+    .invite__brand img { width: 40px; height: 40px; }
+    .invite__brand span { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--ink); }
+    .invite-card {
+      width: 100%; max-width: 460px; background: var(--card);
+      border: var(--b) solid var(--on-color); border-radius: var(--r-lg);
+      box-shadow: 6px 6px 0 var(--on-color); padding: 26px 22px; display: flex; flex-direction: column; gap: 16px; text-align: center; align-items: center;
+    }
+    .invite-card__icon { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: var(--b) solid var(--on-color); }
+    .invite-card__icon i { font-size: 2rem; color: var(--on-color); }
+    .icon--ok { background: var(--mint); }
+    .icon--pending { background: var(--yellow); }
+    .icon--fail { background: var(--coral); }
+    .invite-card__title { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.6rem; line-height: 1.15; color: var(--ink); margin: 0; }
+    .invite-card__text { font-size: .95rem; color: var(--ink-soft); margin: 0; }
+    .invite-note { font-size: .8rem; color: var(--ink-soft); }
+    .invite-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="invite">
+    <a class="invite__brand" href="/" aria-label="CaePe, inicio">
+      <img src="/logo.png" alt="" width="40" height="40" />
+      <span>CaePe</span>
+    </a>
+
+    <div class="invite-card">
+      <div class="invite-card__icon" id="icon"><i class="ph-bold ph-spinner-gap" id="iconGlyph"></i></div>
+      <h1 class="invite-card__title" id="title">Procesando tu pago…</h1>
+      <p class="invite-card__text" id="text">Un momento, estamos confirmando con Mercado Pago.</p>
+      <p class="invite-note"><i class="ph-bold ph-info"></i> La confirmación es automática. Vuelve a la app de CaePe para ver tus créditos o tu Premium.</p>
+      <div class="invite-actions">
+        <a class="btn btn--primary" href="caepe://paywall"><i class="ph-bold ph-arrow-u-up-left"></i> Volver a CaePe</a>
+        <a class="btn btn--ghost" href="/#descargar">Descargar la app</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // MP agrega query params al volver: status / collection_status (approved|pending|rejected).
+    (function () {
+      var q = new URLSearchParams(location.search);
+      var status = q.get("status") || q.get("collection_status") || "pending";
+
+      var icon = document.getElementById("icon");
+      var glyph = document.getElementById("iconGlyph");
+      var title = document.getElementById("title");
+      var text = document.getElementById("text");
+
+      if (status === "approved") {
+        icon.className = "invite-card__icon icon--ok";
+        glyph.className = "ph-bold ph-check-circle";
+        title.textContent = "¡Pago aprobado! 🎉";
+        text.textContent = "Gracias por tu compra. Tu beneficio ya se está activando en la app.";
+      } else if (status === "rejected" || status === "failure") {
+        icon.className = "invite-card__icon icon--fail";
+        glyph.className = "ph-bold ph-x-circle";
+        title.textContent = "El pago no se completó";
+        text.textContent = "No te preocupes, no se te cobró. Puedes intentarlo de nuevo desde la app.";
+      } else {
+        icon.className = "invite-card__icon icon--pending";
+        glyph.className = "ph-bold ph-clock";
+        title.textContent = "Pago en proceso";
+        text.textContent = "Estamos confirmando tu pago. Esto puede tomar unos segundos.";
+      }
+    })();
+  </script>
+</body>
+</html>

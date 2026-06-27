@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CaePe · Te invitaron a la app</title>
+  <meta name="description" content="Un amigo te invitó a CaePe. Descarga la app, regístrate con su código y armen sus salidas sin dramas." />
+
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <meta property="og:title" content="CaePe · Te invitaron a la app" />
+  <meta property="og:description" content="Arma salidas, divide la cuenta y confirma pagos. Únete con el código de tu amigo." />
+  <meta property="og:image" content="https://caepe.lat/logo.png" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css" />
+  <link rel="stylesheet" href="/styles.css" />
+
+  <style>
+    /* ---- Referral page (scoped) ---- */
+    .invite { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 18px; gap: 18px; }
+    .invite__brand { display: flex; align-items: center; gap: 10px; }
+    .invite__brand img { width: 40px; height: 40px; }
+    .invite__brand span { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--ink); }
+    .invite-card {
+      width: 100%; max-width: 460px; background: var(--card);
+      border: var(--b) solid var(--on-color); border-radius: var(--r-lg);
+      box-shadow: 6px 6px 0 var(--on-color); padding: 22px; display: flex; flex-direction: column; gap: 16px;
+    }
+    .invite-card__tag { align-self: flex-start; font-weight: 700; font-size: .8rem; padding: 4px 12px; border-radius: var(--r-pill); background: var(--yellow); border: 2px solid var(--on-color); color: var(--on-color); }
+    .invite-card__title { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 1.6rem; line-height: 1.15; color: var(--ink); margin: 0; }
+    .invite-row { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-weight: 500; }
+    .invite-row i { font-size: 1.2rem; color: var(--coral-2); }
+    .invite-code { background: var(--mint); border: var(--b) solid var(--on-color); border-radius: var(--r); padding: 12px 16px; text-align: center; }
+    .invite-code span { display: block; font-size: .82rem; font-weight: 600; color: var(--on-color-soft); }
+    .invite-code strong { font-family: "Fredoka", sans-serif; font-size: 1.8rem; letter-spacing: 3px; color: var(--on-color); }
+    .invite-note { font-size: .8rem; color: var(--ink-soft); text-align: center; }
+    .invite-actions { display: flex; flex-direction: column; gap: 10px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="invite">
+    <a class="invite__brand" href="/" aria-label="CaePe, inicio">
+      <img src="/logo.png" alt="" width="40" height="40" />
+      <span>CaePe</span>
+    </a>
+
+    <div class="invite-card">
+      <span class="invite-card__tag"><i class="ph-bold ph-gift"></i> ¡Te invitaron a CaePe!</span>
+      <h1 class="invite-card__title">Arma salidas y divide la cuenta sin dramas</h1>
+
+      <div class="invite-row"><i class="ph-bold ph-confetti"></i><span>Tu pata te invitó. Regístrate con su código.</span></div>
+
+      <div class="invite-code">
+        <span>Tu código de invitación</span>
+        <strong id="refCode">—</strong>
+      </div>
+
+      <p class="invite-note"><i class="ph-bold ph-info"></i> Descarga la app, crea tu cuenta e ingresa este código en el campo "Código de invitación".</p>
+
+      <div class="invite-actions">
+        <a class="btn btn--primary" id="openApp" href="#"><i class="ph-bold ph-device-mobile"></i> Abrir en la app</a>
+        <a class="btn btn--ghost" href="/#descargar"><i class="ph-bold ph-download-simple"></i> Descargar CaePe</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      function getCode() {
+        var m = location.pathname.match(/\/r\/([^/?#]+)/i);
+        if (m) return decodeURIComponent(m[1]);
+        return new URLSearchParams(location.search).get("code") || "";
+      }
+      var code = (getCode() || "").toUpperCase();
+      document.getElementById("refCode").textContent = code || "—";
+      // Intento de deep link a la app (si está instalada).
+      var open = document.getElementById("openApp");
+      open.setAttribute("href", "caepe://register?ref=" + encodeURIComponent(code));
+    })();
+  </script>
+</body>
+</html>
